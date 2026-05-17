@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>C# Developer</title>
+<title> Console  Dev</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --cyan: #00f5ff;
+  --blue: #0066ff;
+  --purple: #bf00ff;
+  --green: #00ff88;
+  --orange: #ff6600;
+  --bg: #020408;
+  --text: #e0f0ff;
+}
+
+html, body {
+  width: 100%; min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  overflow-x: hidden;
+}
+
+.bg-stars {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(0,102,255,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(191,0,255,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 80%, rgba(0,245,255,0.06) 0%, transparent 60%);
+}
+
+.bg-stars::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 15%, rgba(0,245,255,0.8) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 35%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 10%, rgba(0,245,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 25%, rgba(255,255,255,0.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 5%, rgba(191,0,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 40%, rgba(0,245,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 70%, rgba(0,245,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 50% 90%, rgba(191,0,255,0.5) 0%, transparent 100%),
+    radial-gradient(2px 2px at 5% 80%, rgba(0,102,255,0.6) 0%, transparent 100%),
+    radial-gradient(2px 2px at 95% 15%, rgba(191,0,255,0.5) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 55% 55%, rgba(0,245,255,0.7) 0%, transparent 100%);
+  animation: twinkle 4s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle { from { opacity:0.6; } to { opacity:1; } }
+
+.scanline {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,245,255,0.012) 2px, rgba(0,245,255,0.012) 4px);
+}
+
+.scan-beam {
+  position: fixed; left:0; right:0; height:2px; z-index:2; pointer-events:none;
+  background: linear-gradient(90deg, transparent, rgba(0,245,255,0.5), transparent);
+  animation: scanBeam 7s linear infinite;
+  box-shadow: 0 0 15px rgba(0,245,255,0.4);
+}
+@keyframes scanBeam { 0%{top:-5px} 100%{top:100vh} }
+
+.corner { position:fixed; width:28px; height:28px; z-index:5; pointer-events:none; }
+.corner.tl{top:10px;left:10px;border-top:2px solid var(--cyan);border-left:2px solid var(--cyan);}
+.corner.tr{top:10px;right:10px;border-top:2px solid var(--cyan);border-right:2px solid var(--cyan);}
+.corner.bl{bottom:10px;left:10px;border-bottom:2px solid var(--cyan);border-left:2px solid var(--cyan);}
+.corner.br{bottom:10px;right:10px;border-bottom:2px solid var(--cyan);border-right:2px solid var(--cyan);}
+
+.page {
+  position:relative; z-index:10;
+  width:100%; min-height:100vh;
+  padding:18px 14px 28px;
+  display:flex; flex-direction:column;
+}
+
+.hud-top {
+  display:flex; justify-content:space-between; align-items:center;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(0,245,255,0.12);
+  margin-bottom:18px;
+  animation: fadeIn 0.5s ease both;
+}
+
+.hud-id { font-family:'Orbitron',monospace; font-size:8px; letter-spacing:0.2em; color:rgba(0,245,255,0.45); }
+
+.hud-status { display:flex; align-items:center; gap:5px; font-size:8px; letter-spacing:0.15em; color:var(--green); font-family:'Orbitron',monospace; }
+
+.pulse-dot { width:6px; height:6px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); animation:blink 1.5s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+.hero { text-align:center; padding:8px 0 20px; animation:fadeIn 0.6s 0.1s ease both; }
+
+.avatar-ring { width:90px; height:90px; margin:0 auto 14px; position:relative; }
+.avatar-ring::before {
+  content:''; position:absolute; inset:-4px; border-radius:50%;
+  border:2px solid transparent; border-top-color:var(--cyan); border-right-color:var(--purple);
+  animation:spin 3s linear infinite;
+}
+.avatar-ring::after {
+  content:''; position:absolute; inset:-9px; border-radius:50%;
+  border:1px solid transparent; border-bottom-color:rgba(0,245,255,0.25); border-left-color:rgba(191,0,255,0.25);
+  animation:spin 5s linear infinite reverse;
+}
+@keyframes spin { to{transform:rotate(360deg)} }
+
+.avatar-inner {
+  width:100%; height:100%; border-radius:50%;
+  background:linear-gradient(135deg,#080818,#0c1828);
+  border:1px solid rgba(0,245,255,0.2);
+  display:flex; align-items:center; justify-content:center; font-size:38px;
+  box-shadow:0 0 30px rgba(0,102,255,0.25),inset 0 0 20px rgba(0,245,255,0.04);
+}
+
+.hero-name {
+  font-family:'Orbitron',monospace; font-size:20px; font-weight:900; letter-spacing:0.04em;
+  background:linear-gradient(90deg,var(--cyan),#fff,var(--purple));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  margin-bottom:5px;
+}
+
+.hero-title { font-size:11px; font-weight:300; color:rgba(0,245,255,0.55); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:10px; }
+
+.hero-line { width:70px; height:1px; margin:0 auto; background:linear-gradient(90deg,transparent,var(--cyan),transparent); box-shadow:0 0 8px var(--cyan); }
+
+.glitch-tag {
+  display:inline-block; font-family:'Orbitron',monospace; font-size:9px; letter-spacing:0.12em;
+  color:var(--orange); border:1px solid rgba(255,102,0,0.4); padding:4px 12px; border-radius:2px;
+  margin-top:10px; background:rgba(255,102,0,0.05);
+}
+
+.section { margin-bottom:18px; animation:fadeUp 0.6s ease both; }
+
+.sec-header { display:flex; align-items:center; gap:8px; margin-bottom:9px; }
+.sec-line { flex:1; height:1px; background:linear-gradient(90deg,var(--cyan),transparent); opacity:0.25; }
+.sec-title { font-family:'Orbitron',monospace; font-size:8px; letter-spacing:0.22em; color:var(--cyan); opacity:0.65; white-space:nowrap; }
+
+.about-box {
+  background:rgba(0,245,255,0.02); border:1px solid rgba(0,245,255,0.1);
+  border-left:3px solid var(--cyan); border-radius:0 8px 8px 0;
+  padding:13px 15px; font-size:14px; line-height:1.65; color:rgba(224,240,255,0.8);
+}
+.about-box strong { color:var(--cyan); font-weight:600; }
+
+.skill-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+
+.skill-item {
+  background:rgba(0,10,30,0.85); border:1px solid rgba(0,245,255,0.1); border-radius:6px;
+  padding:9px 11px; display:flex; align-items:center; gap:7px;
+  font-size:13px; font-weight:600; position:relative; overflow:hidden;
+}
+.skill-item::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; }
+
+.skill-item.c{color:#a78bfa;border-color:rgba(167,139,250,0.18);} .skill-item.c::before{background:#a78bfa;box-shadow:0 0 6px #a78bfa;}
+.skill-item.b{color:var(--cyan);border-color:rgba(0,245,255,0.18);} .skill-item.b::before{background:var(--cyan);box-shadow:0 0 6px var(--cyan);}
+.skill-item.g{color:var(--green);border-color:rgba(0,255,136,0.18);} .skill-item.g::before{background:var(--green);box-shadow:0 0 6px var(--green);}
+.skill-item.o{color:var(--orange);border-color:rgba(255,102,0,0.18);} .skill-item.o::before{background:var(--orange);box-shadow:0 0 6px var(--orange);}
+.skill-item.p{color:#f472b6;border-color:rgba(244,114,182,0.18);} .skill-item.p::before{background:#f472b6;box-shadow:0 0 6px #f472b6;}
+.skill-emoji{font-size:15px;}
+
+.stat-row { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+.stat-card { background:rgba(0,10,30,0.9); border:1px solid rgba(0,245,255,0.13); border-radius:8px; padding:13px 6px; text-align:center; position:relative; overflow:hidden; }
+.stat-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; }
+.stat-card.s1::after{background:linear-gradient(90deg,transparent,var(--cyan),transparent);box-shadow:0 0 6px var(--cyan);}
+.stat-card.s2::after{background:linear-gradient(90deg,transparent,var(--purple),transparent);box-shadow:0 0 6px var(--purple);}
+.stat-card.s3::after{background:linear-gradient(90deg,transparent,var(--green),transparent);box-shadow:0 0 6px var(--green);}
+.stat-icon{font-size:20px;display:block;margin-bottom:4px;}
+.stat-val{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;display:block;margin-bottom:2px;}
+.stat-card.s1 .stat-val{color:var(--cyan);} .stat-card.s2 .stat-val{color:var(--purple);} .stat-card.s3 .stat-val{color:var(--green);}
+.stat-sub{font-size:8px;color:rgba(224,240,255,0.35);letter-spacing:0.06em;}
+
+.passion-list{display:flex;flex-direction:column;gap:7px;}
+.passion-row{display:flex;align-items:center;gap:10px;padding:9px 13px;background:rgba(0,10,30,0.6);border:1px solid rgba(0,245,255,0.07);border-radius:6px;font-size:13px;color:rgba(224,240,255,0.72);}
+.p-icon{font-size:17px;flex-shrink:0;}
+.p-bar{margin-left:auto;width:44px;height:3px;background:rgba(0,245,255,0.08);border-radius:2px;overflow:hidden;}
+.p-fill{height:100%;border-radius:2px;background:var(--cyan);box-shadow:0 0 5px var(--cyan);}
+
+.code-box{background:#02060e;border:1px solid rgba(0,245,255,0.13);border-radius:8px;overflow:hidden;}
+.code-top{display:flex;align-items:center;gap:5px;padding:9px 13px;background:rgba(0,245,255,0.03);border-bottom:1px solid rgba(0,245,255,0.08);}
+.c-dot{width:8px;height:8px;border-radius:50%;}
+.c-dot.r{background:#ff5f57;} .c-dot.y{background:#febc2e;} .c-dot.g{background:#28c840;}
+.c-fname{margin-left:5px;font-family:'Orbitron',monospace;font-size:8px;color:rgba(0,245,255,0.35);letter-spacing:0.1em;}
+.code-body{padding:14px 13px;font-family:'Rajdhani',monospace;font-size:13px;line-height:1.75;}
+.kw{color:#c792ea;} .cl{color:#82aaff;} .st{color:#c3e88d;} .cm{color:#2e3e4e;font-style:italic;} .pr{color:#ff9d00;} .nm{color:#f78c6c;}
+
+.footer-btns{display:flex;gap:9px;}
+.btn{flex:1;padding:12px 6px;border-radius:6px;font-family:'Orbitron',monospace;font-size:8px;letter-spacing:0.1em;font-weight:700;text-align:center;border:none;cursor:pointer;text-decoration:none;display:block;}
+.btn-primary{background:linear-gradient(135deg,rgba(0,102,255,0.25),rgba(0,245,255,0.15));border:1px solid var(--cyan);color:var(--cyan);box-shadow:0 0 16px rgba(0,245,255,0.12);}
+.btn-sec{background:rgba(191,0,255,0.07);border:1px solid rgba(191,0,255,0.35);color:#d580ff;}
+.btn-thr{background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.28);color:var(--green);}
+
+.hud-bottom{display:flex;justify-content:space-between;padding-top:14px;border-top:1px solid rgba(0,245,255,0.08);margin-top:6px;}
+.hud-txt{font-family:'Orbitron',monospace;font-size:7px;letter-spacing:0.13em;color:rgba(0,245,255,0.28);}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.section:nth-child(2){animation-delay:0.1s} .section:nth-child(3){animation-delay:0.2s}
+.section:nth-child(4){animation-delay:0.3s} .section:nth-child(5){animation-delay:0.4s}
+.section:nth-child(6){animation-delay:0.5s} .section:nth-child(7){animation-delay:0.6s}
+</style>
+</head>
+<body>
+<div class="bg-stars"></div>
+<div class="scanline"></div>
+<div class="scan-beam"></div>
+<div class="corner tl"></div><div class="corner tr"></div>
+<div class="corner bl"></div><div class="corner br"></div>
+
+<div class="page">
+  <div class="hud-top">
+    <div class="hud-id">DEV-ID :: CS#2026</div>
+    <div class="hud-status"><div class="pulse-dot"></div>ONLINE</div>
+  </div>
+
+  <div class="hero section">
+    <div class="avatar-ring"><div class="avatar-inner">👨‍💻</div></div>
+    <div class="hero-name">C# DEVELOPER</div>
+    <div class="hero-title">// Backend · Desktop · Automation</div>
+    <div class="hero-line"></div>
+    <div class="glitch-tag">⚡ OPEN TO WORK</div>
+  </div>
+
+  <div class="section">
+    <div class="sec-header"><div class="sec-title">▸ ABOUT</div><div class="sec-line"></div></div>
+    <div class="about-box">
+      🎯 Passionate <strong>.NET & C# Developer</strong> building <strong>high-performance</strong> desktop apps 🖥️, scalable APIs 🔗, and smart automation tools 🤖. Clean code, SOLID principles, smooth UX — every single time. 💪
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-header"><div class="sec-title">▸ TECH STACK</div><div class="sec-line"></div></div>
+    <div class="skill-grid">
+      <div class="skill-item c"><span class="skill-emoji">🔷</span> C# / .NET</div>
+      <div class="skill-item c"><span class="skill-emoji">🏗️</span> ASP.NET Core</div>
+      <div class="skill-item b"><span class="skill-emoji">🪟</span> WPF / MAUI</div>
+      <div class="skill-item b"><span class="skill-emoji">🎨</span> WinForms</div>
+      <div class="skill-item g"><span class="skill-emoji">🗄️</span> Entity FW</div>
+      <div class="skill-item g"><span class="skill-emoji">🔌</span> REST APIs</div>
+      <div class="skill-item o"><span class="skill-emoji">🐳</span> Docker</div>
+      <div class="skill-item o"><span class="skill-emoji">🧪</span> xUnit/NUnit</div>
+      <div class="skill-item p"><span class="skill-emoji">🔁</span> MVVM</div>
+      <div class="skill-item p"><span class="skill-emoji">🧹</span> Clean Arch</div>
+      <div class="skill-item c"><span class="skill-emoji">💾</span> SQL Server</div>
+      <div class="skill-item g"><span class="skill-emoji">🔄</span> CI/CD</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-header"><div class="sec-title">▸ SPECIALTIES</div><div class="sec-line"></div></div>
+    <div class="stat-row">
+      <div class="stat-card s1"><span class="stat-icon">🖥️</span><span class="stat-val">DESKTOP</span><span class="stat-sub">WPF·MAUI</span></div>
+      <div class="stat-card s2"><span class="stat-icon">⚙️</span><span class="stat-val">BACKEND</span><span class="stat-sub">API·DB</span></div>
+      <div class="stat-card s3"><span class="stat-icon">🤖</span><span class="stat-val">AUTO</span><span class="stat-sub">TOOLS·BOTS</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-header"><div class="sec-title">▸ WHAT DRIVES ME</div><div class="sec-line"></div></div>
+    <div class="passion-list">
+      <div class="passion-row"><span class="p-icon">🧩</span> Solving real-world problems with code <div class="p-bar"><div class="p-fill" style="width:95%"></div></div></div>
+      <div class="passion-row"><span class="p-icon">📐</span> Clean architecture & SOLID principles <div class="p-bar"><div class="p-fill" style="width:90%"></div></div></div>
+      <div class="passion-row"><span class="p-icon">🚀</span> Optimizing performance — speed matters <div class="p-bar"><div class="p-fill" style="width:98%"></div></div></div>
+      <div class="passion-row"><span class="p-icon">🎨</span> Smooth UX that users love <div class="p-bar"><div class="p-fill" style="width:85%"></div></div></div>
+      <div class="passion-row"><span class="p-icon">📚</span> Continuous learning & growth <div class="p-bar"><div class="p-fill" style="width:92%"></div></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-header"><div class="sec-title">▸ MINDSET</div><div class="sec-line"></div></div>
+    <div class="code-box">
+      <div class="code-top"><div class="c-dot r"></div><div class="c-dot y"></div><div class="c-dot g"></div><span class="c-fname">Developer.cs</span></div>
+      <div class="code-body">
+        <span class="kw">public class</span> <span class="cl">CSharpDev</span> {<br>
+        &nbsp;<span class="pr">Goal</span> = <span class="st">"Build. Ship. 🚀"</span>;<br>
+        &nbsp;<span class="pr">IsLearning</span> = <span class="nm">true</span>; <span class="cm">// always ♾️</span><br>
+        &nbsp;<span class="pr">Loves</span> = {<span class="st">"CleanCode"</span>🧹, <span class="st">"SOLID"</span>🏗️};<br>
+        &nbsp;<span class="kw">string</span> <span class="cl">Solve</span>(problem){<br>
+        &nbsp;&nbsp;<span class="kw">return</span> <span class="st">"Efficient ✅"</span>;<br>
+        &nbsp;}<br>}
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="footer-btns">
+      <a class="btn btn-primary" href="https://t.me/Console_sharp" target="_blank">💬 HIRE ME</a>
+      <a class="btn btn-sec" href="https://t.me/Console_sharp" target="_blank">📂 PORTFOLIO</a>
+      <a class="btn btn-thr" href="https://github.com/sohamsharma1612-cyber" target="_blank">🐙 GITHUB</a>
+    </div>
+  </div>
+
+  <div class="hud-bottom">
+    <div class="hud-txt">SYS :: C# · .NET · CLEAN CODE</div>
+    <div class="hud-txt">v2.0.26 ✦</div>
+  </div>
+</div>
+</body>
+</html>
